@@ -7,9 +7,11 @@ import EventCard from "@/components/EventCard";
 import { Suspense, useEffect, useState } from "react";
 import { EventType } from "@/types/events";
 import { getEvents } from "@/lib/events";
+import { getPreviewImageById } from "@/lib/storage";
 
 function Home() {
   const [events, setEvents] = useState<Array<EventType> | undefined>();
+
   useEffect(() => {
     (async () => {
       const EventsData = await getEvents();
@@ -38,17 +40,18 @@ function Home() {
             <Container>
               <div className="grid gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {events.map((event) => {
+                  const imageUrl = event.imageFileId && getPreviewImageById(event.imageFileId);
                   return (
                     <Link key={event.name} href={`/event/${event.$id}`}>
                       <a>
                         <EventCard
                           date={event.date}
-                          // image={{
-                          //   alt: '',
-                          //   height: event.imageHeight,
-                          //   url: event.imageUrl,
-                          //   width: event.imageWidth
-                          // }}
+                          image={{
+                            alt: '',
+                            height: event.imageHeight,
+                            url: imageUrl,
+                            width: event.imageWidth
+                          }}
                           location={event.location}
                           name={event.name}
                         />

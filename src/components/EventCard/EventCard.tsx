@@ -1,10 +1,10 @@
 interface EventCardProps {
   date: string;
   image?: {
-    alt: string;
-    height: number;
-    url: string;
-    width: number;
+    alt: string | undefined;
+    height: number | undefined;
+    url: string | undefined;
+    width: number | undefined;
   }
   location: string;
   name: string;

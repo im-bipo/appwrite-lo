@@ -2,23 +2,25 @@ import Layout from "@/components/Layout";
 import Container from "@/components/Container";
 import Button from "@/components/Button";
 
-import events from "@/data/events.json";
 import { getEventById } from "@/lib/events";
 import { useEffect, useState } from "react";
 import { EventType } from "@/types/events";
+import { getPreviewImageById } from "@/lib/storage";
 
 type EventParamsType = {
-  params :{
+  params: {
     eventId: string;
-  }
-}
-function Event({ params }:EventParamsType) {
+  };
+};
+
+function Event({ params }: EventParamsType) {
+  const [event, setEvent] = useState<EventType | undefined>();
+  const imageUrl =
+    event?.imageFileId && getPreviewImageById(event?.imageFileId);
   const image = {
-    url: events[0].imageUrl,
+    url: imageUrl,
     alt: "",
   };
-  
-  const [event, setEvent] = useState<EventType | undefined>();
 
   useEffect(() => {
     (async function run() {

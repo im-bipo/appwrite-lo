@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import Layout from "@/components/Layout";
 import Container from "@/components/Container";
@@ -8,16 +8,35 @@ import InputText from "@/components/InputText";
 import InputDate from "@/components/InputDate";
 import InputFile from "@/components/InputFile";
 import Button from "@/components/Button";
-import { ID } from "appwrite";
-import { EventType } from "@/types/events";
 import { createNewEvent } from "@/lib/events";
+import { uploadFile } from "@/lib/storage";
+
+type EventImageType = {
+  width: number;
+  height: number;
+  file: File;
+};
 
 function EventNew() {
   const [error] = useState<string>();
+  const [image, setImage] = useState<EventImageType>();
 
-  /**
-   * handleOnSubmit
-   */
+  /* handleOnSubmit*/
+
+  const handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement & {
+      files: FileList;
+    };
+    const img = new Image();
+    img.onload = function () {
+      setImage({
+        width: img.width,
+        height: img.height,
+        file: target.files[0],
+      });
+    };
+    img.src = URL.createObjectURL(target.files[0]);
+  };
 
   async function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -27,11 +46,20 @@ function EventNew() {
       location: { value: string };
       date: { value: string };
     };
+    let file;
+
+    if (image?.file) {
+      file = await uploadFile(image.file);
+    }
     const formData = {
       date: new Date(target.date.value).toISOString(),
       name: target.name.value,
       location: target.location.value,
+      imageFileId: file?.$id,
+      imageHeight: image?.height,
+      imageWidth: image?.width,
     };
+
     const result = await createNewEvent(formData);
     console.log(result);
   }
@@ -75,7 +103,7 @@ function EventNew() {
 
           <FormRow className="mb-6">
             <FormLabel htmlFor="image">File</FormLabel>
-            <InputFile id="image" name="image" />
+            <InputFile id="image" name="image" onChange={handleOnChange} />
             <p className="text-sm mt-2">Accepted File Types: jpg, png</p>
           </FormRow>
 

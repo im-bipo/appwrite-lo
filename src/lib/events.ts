@@ -34,7 +34,10 @@ function mapDocumentToEvent (document:Models.Document) {
         $id: document.$id,
         name: document.name,
         date: document.date,
-        location: document.location
+        location: document.location,
+        imageFileId: document.imageFileId,
+        imageHeight: document.imageHeight,
+        imageWidth: document.imageWidth,
       };
       return event;
 }
