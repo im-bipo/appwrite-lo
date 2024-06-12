@@ -10,6 +10,7 @@ import InputFile from "@/components/InputFile";
 import Button from "@/components/Button";
 import { createNewEvent } from "@/lib/events";
 import { uploadFile } from "@/lib/storage";
+import { useLocation } from "wouter";
 
 type EventImageType = {
   width: number;
@@ -18,6 +19,7 @@ type EventImageType = {
 };
 
 function EventNew() {
+  const [,setLocation] = useLocation();
   const [error] = useState<string>();
   const [image, setImage] = useState<EventImageType>();
 
@@ -61,7 +63,7 @@ function EventNew() {
     };
 
     const result = await createNewEvent(formData);
-    console.log(result);
+    setLocation('/event/'+result.$id)
   }
 
   return (

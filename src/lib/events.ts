@@ -29,6 +29,7 @@ export async function createNewEvent(NewEvent: Omit<EventType,'$id'>){
       return event;
 } 
 
+
 function mapDocumentToEvent (document:Models.Document) {
     const event: EventType = {
         $id: document.$id,
