@@ -1,44 +1,57 @@
 import { ID, Models } from "appwrite";
 import { EventType } from "@/types/events";
-import { database } from "./appwrite";
+import { APPWRITE_PROJECT, database } from "./appwrite";
+import { deleteImageById } from "./storage";
 
 export async function getEvents() {
   const { documents } = await database.listDocuments(
-    import.meta.env.VITE_APPWRITE_DATABASE_ID,
-    import.meta.env.VITE_APPWRITE_COLLECTION_ID
+    APPWRITE_PROJECT.Databases,
+    APPWRITE_PROJECT.Collection,
   );
-  const event = documents.map(mapDocumentToEvent)
-  return event
+  const event = documents.map(mapDocumentToEvent);
+  return event;
 }
 
-export async function getEventById(eventId: string){
-    const documents  = await database.getDocument(
-        import.meta.env.VITE_APPWRITE_DATABASE_ID,
-        import.meta.env.VITE_APPWRITE_COLLECTION_ID,
-        eventId
-      );
-      const event = mapDocumentToEvent(documents);
-      return event;
-} 
-export async function createNewEvent(NewEvent: Omit<EventType,'$id'>){
-    const documents  = await database.createDocument(
-        import.meta.env.VITE_APPWRITE_DATABASE_ID,
-        import.meta.env.VITE_APPWRITE_COLLECTION_ID,ID.unique(),NewEvent
-      );
-      const event = mapDocumentToEvent(documents);
-      return event;
-} 
+export async function getEventById(eventId: string) {
+  const documents = await database.getDocument(
+    APPWRITE_PROJECT.Databases,
+    APPWRITE_PROJECT.Collection,
+    eventId
+  );
+  const event = mapDocumentToEvent(documents);
+  return event;
+}
+export async function createNewEvent(NewEvent: Omit<EventType, "$id">) {
+  const documents = await database.createDocument(
+    APPWRITE_PROJECT.Databases,
+    APPWRITE_PROJECT.Collection,
+    ID.unique(),
+    NewEvent
+  );
+  const event = mapDocumentToEvent(documents);
+  return event;
+}
 
+export async function deleteEvent(event: EventType) {
+  deleteImageById(event.imageFileId);
+  const documents = await database.deleteDocument(
+    APPWRITE_PROJECT.Databases,
+    APPWRITE_PROJECT.Collection,
+    event.$id
+  );
+  console.log("delete document", documents);
+  return documents;
+}
 
-function mapDocumentToEvent (document:Models.Document) {
-    const event: EventType = {
-        $id: document.$id,
-        name: document.name,
-        date: document.date,
-        location: document.location,
-        imageFileId: document.imageFileId,
-        imageHeight: document.imageHeight,
-        imageWidth: document.imageWidth,
-      };
-      return event;
+function mapDocumentToEvent(document: Models.Document) {
+  const event: EventType = {
+    $id: document.$id,
+    name: document.name,
+    date: document.date,
+    location: document.location,
+    imageFileId: document.imageFileId,
+    imageHeight: document.imageHeight,
+    imageWidth: document.imageWidth,
+  };
+  return event;
 }

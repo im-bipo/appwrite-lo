@@ -1,9 +1,9 @@
 import { ID } from "appwrite";
-import { storage } from "./appwrite";
+import { APPWRITE_PROJECT, storage } from "./appwrite";
 
 export const uploadFile = async (file: File) => {
   const data = await storage.createFile(
-    import.meta.env.VITE_APPWRITE_BUCKET_ID,
+    APPWRITE_PROJECT.Bucket,
     ID.unique(),
     file
   );
@@ -12,8 +12,12 @@ export const uploadFile = async (file: File) => {
 
 export const getPreviewImageById = (FileId: string) => {
   const data = storage.getFilePreview(
-    import.meta.env.VITE_APPWRITE_BUCKET_ID,
+   APPWRITE_PROJECT.Bucket,
     FileId
   );
   return data.href;
+};
+
+export const deleteImageById = (FileId: string) => {
+  storage.deleteFile(APPWRITE_PROJECT.Bucket, FileId);
 };

@@ -3,7 +3,7 @@ export type EventType = {
     name: string;
     date: string;
     location: string
-    imageFileId?: string;
-    imageHeight?: number;
-    imageWidth?: number;
+    imageFileId: string;
+    imageHeight: number;
+    imageWidth: number;
   }

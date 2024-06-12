@@ -2,10 +2,11 @@ import Layout from "@/components/Layout";
 import Container from "@/components/Container";
 import Button from "@/components/Button";
 
-import { getEventById } from "@/lib/events";
+import { deleteEvent, getEventById } from "@/lib/events";
 import { useEffect, useState } from "react";
 import { EventType } from "@/types/events";
 import { getPreviewImageById } from "@/lib/storage";
+import { useLocation } from "wouter";
 
 type EventParamsType = {
   params: {
@@ -14,6 +15,7 @@ type EventParamsType = {
 };
 
 function Event({ params }: EventParamsType) {
+  const [,setLocation] = useLocation()
   const [event, setEvent] = useState<EventType | undefined>();
   const imageUrl =
     event?.imageFileId && getPreviewImageById(event?.imageFileId);
@@ -28,6 +30,13 @@ function Event({ params }: EventParamsType) {
       setEvent(eventData);
     })();
   }, [params.eventId]);
+
+  
+
+  const handleDelete = async () => {
+    event && (await deleteEvent(event));
+    setLocation('/?eventdeleted=eventid')
+  };
 
   return (
     <Layout>
@@ -60,7 +69,9 @@ function Event({ params }: EventParamsType) {
                 <strong>Location:</strong> {event?.location}
               </p>
               <p className="mt-6">
-                <Button color="red">Delete Event</Button>
+                <Button color="red" onClick={handleDelete}>
+                  Delete Event
+                </Button>
               </p>
             </>
           )}
