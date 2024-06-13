@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Link, Route } from 'wouter';
+import { Route } from 'wouter';
 
 import Home from '@/pages/index';
 import Login from '@/pages/login';

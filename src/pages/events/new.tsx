@@ -19,7 +19,7 @@ type EventImageType = {
 };
 
 function EventNew() {
-  const [,setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const [error] = useState<string>();
   const [image, setImage] = useState<EventImageType>();
 
@@ -61,11 +61,9 @@ function EventNew() {
       imageHeight: image?.height,
       imageWidth: image?.width,
     };
-
     const result = await createNewEvent(formData);
-    setLocation('/event/'+result.$id)
+    setLocation("/event/" + result.$id);
   }
-
   return (
     <Layout>
       <Container className="grid gap-12 grid-cols-1 md:grid-cols-2">

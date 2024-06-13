@@ -6,7 +6,7 @@ import { deleteImageById } from "./storage";
 export async function getEvents() {
   const { documents } = await database.listDocuments(
     APPWRITE_PROJECT.Databases,
-    APPWRITE_PROJECT.Collection,
+    APPWRITE_PROJECT.Collection
   );
   const event = documents.map(mapDocumentToEvent);
   return event;
@@ -21,7 +21,9 @@ export async function getEventById(eventId: string) {
   const event = mapDocumentToEvent(documents);
   return event;
 }
-export async function createNewEvent(NewEvent: Omit<EventType, "$id">) {
+export async function createNewEvent(
+  NewEvent: Omit<EventType, "$id" | "imageFileId" | "imageHeight" | "imageWidth">
+) {
   const documents = await database.createDocument(
     APPWRITE_PROJECT.Databases,
     APPWRITE_PROJECT.Collection,
